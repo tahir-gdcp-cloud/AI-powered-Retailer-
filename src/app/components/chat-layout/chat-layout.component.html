@@ -1,0 +1,63 @@
+<div class="fixed inset-0 flex animate-gradient-bg text-gray-100 overflow-hidden font-sans">
+  <app-network-background></app-network-background>
+  <!-- Mobile Backdrop Overlay -->
+  <div *ngIf="chatService.isSidebarOpen()" (click)="chatService.toggleSidebar()"
+    class="fixed inset-0 bg-black/60 z-50 md:hidden transition-opacity cursor-pointer">
+  </div>
+
+  <app-sidebar
+    class="flex flex-col bg-[#171717] transition-all duration-300 transform fixed inset-y-0 left-0 z-[60] md:relative"
+    [ngClass]="chatService.isSidebarOpen() ? 'w-[75vw] sm:w-64 border-r border-white/5 opacity-100 translate-x-0 shadow-2xl md:shadow-none' : 'w-0 border-none opacity-0 -translate-x-full overflow-hidden'">
+  </app-sidebar>
+
+  <div class="flex-1 flex flex-col h-full relative min-w-0 overflow-hidden w-full">
+    <!-- Unified Top Header bar -->
+    <header class="flex-none h-[64px] flex items-center justify-between px-4 sm:px-6 w-full z-50 bg-transparent">
+      <!-- Left side (Toggle) -->
+      <div class="flex items-center w-10">
+        <button *ngIf="!chatService.isSidebarOpen()" (click)="chatService.toggleSidebar()"
+          class="p-2 -ml-2 rounded-md hover:bg-[#2f2f2f] transition-colors focus:outline-none text-white/70 hover:text-white group relative">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="w-5 h-5">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M3 6C3 5.44772 3.44772 5 4 5H20C20.5523 5 21 5.44772 21 6C21 6.55228 20.5523 7 20 7H4C3.44772 7 3 6.55228 3 6ZM3 12C3 11.4477 3.44772 11 4 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H4C3.44772 13 3 12.5523 3 12ZM4 17C3.44772 17 3 17.4477 3 18C3 18.5523 3.44772 19 4 19H20C20.5523 19 21 18.5523 21 18C21 17.4477 20.5523 17 20 17H4Z"
+              fill="currentColor"></path>
+          </svg>
+          <div
+            class="absolute left-10 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity text-medium pointer-events-none z-50 shadow-md border border-white/10">
+            Open sidebar
+          </div>
+        </button>
+      </div>
+
+      <!-- Right side (Auth) -->
+      <div class="flex items-center gap-2 pr-2">
+        <button
+          class="hidden sm:block px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300">
+          Sign in
+        </button>
+        <button
+          class="px-5 py-2 text-sm font-bold text-white bg-white/10 backdrop-blur-md border border-white/20 hover:border-teal-400/60 hover:bg-white/20 hover:text-teal-400 hover:shadow-[0_0_15px_rgba(45,212,191,0.3)] rounded-full transition-all duration-300 shadow-lg tracking-wide">
+          Sign up
+        </button>
+      </div>
+    </header>
+
+    <app-chat-main class="flex-1 flex flex-col min-h-0 w-full min-w-0 relative"></app-chat-main>
+  </div>
+</div>
+
+<!-- Global Delete Confirmation Modal -->
+<div *ngIf="chatService.sessionToDelete()" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="chatService.cancelDelete()"></div>
+  <div
+    class="relative bg-[#0f172a] border border-white/10 rounded-2xl p-6 w-full max-w-[360px] shadow-2xl transform scale-100 transition-all">
+    <h3 class="text-lg font-semibold text-white mb-2">Delete conversation?</h3>
+    <p class="text-sm text-gray-400 mb-6">This will permanently delete the conversation from your history.</p>
+    <div class="flex justify-end gap-3 font-medium">
+      <button (click)="chatService.cancelDelete()"
+        class="px-4 py-2 rounded-lg text-sm text-white bg-slate-700 hover:bg-slate-600 transition-colors">Cancel</button>
+      <button (click)="chatService.executeDelete()"
+        class="px-4 py-2 rounded-lg text-sm bg-red-600 hover:bg-red-700 text-white shadow-sm transition-colors">Delete</button>
+    </div>
+  </div>
+</div>

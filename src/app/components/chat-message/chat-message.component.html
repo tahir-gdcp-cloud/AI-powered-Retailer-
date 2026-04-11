@@ -1,0 +1,16 @@
+<div class="w-full flex"
+  [ngClass]="{'justify-end': message.role === 'user', 'justify-start': message.role === 'assistant'}">
+  <div *ngIf="message.role === 'assistant'"
+    class="w-8 h-8 rounded-full border border-white/20 shrink-0 flex items-center justify-center text-white mr-4 font-bold text-sm shadow-sm"
+    style="background-color: transparent">
+    <svg viewBox="0 0 24 24" fill="currentColor" class="text-white w-5 h-5">
+      <path d="M12 2l2.4 7.6 7.6 2.4-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z" />
+    </svg>
+  </div>
+
+  <div
+    class="max-w-[85%] sm:max-w-[70%] rounded-3xl px-5 py-2.5 text-[15px] leading-relaxed break-words whitespace-pre-wrap font-sans backdrop-blur-md shadow-lg"
+    [ngClass]="message.role === 'user' ? 'bg-white/10 border border-white/20 text-white' : 'bg-transparent text-gray-100 p-0 !pl-0'">
+    {{ message.content }}
+  </div>
+</div>

@@ -1,0 +1,88 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
+  body {
+    @apply bg-[#0b1121] text-gray-100;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    /* IE margin */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+  }
+}
+
+/* Base custom animations to avoid Tailwind CLI cache issues securely */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatStore {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+.hover-animate-float:hover {
+  animation: floatStore 4s ease-in-out infinite !important;
+}
+
+.anim-delay-100 {
+  animation-delay: 100ms !important;
+}
+
+.anim-delay-200 {
+  animation-delay: 200ms !important;
+}
+
+.anim-delay-300 {
+  animation-delay: 300ms !important;
+}
+
+.anim-delay-400 {
+  animation-delay: 400ms !important;
+}
+
+/* Professional Tech Network Background */
+.animate-gradient-bg {
+  background-color: #0b1121 !important;
+}

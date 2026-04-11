@@ -1,0 +1,299 @@
+<div class="flex-1 overflow-y-auto w-full px-4 scroll-smooth hide-scrollbar" #scrollContainer>
+   <!-- Welcome screen if empty -->
+   <div *ngIf="chatService.messages().length === 0"
+      class="min-h-full flex flex-col items-center justify-start pt-8 md:pt-12 w-full max-w-3xl mx-auto pb-32">
+      <div class="w-full max-w-[800px] mb-8 flex items-center justify-between px-2 animate-fade-in-up opacity-0">
+         <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+               <svg class="w-6 h-6 text-[#10a37f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
+                  </path>
+               </svg>
+               AI-Powered Retail OS
+            </h2>
+            <div class="text-xs text-green-400 flex items-center gap-1.5 mt-1.5 font-mono">
+               <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+               SYSTEM ONLINE • INVENTORY SYNCED
+            </div>
+         </div>
+         <!-- <div class="hidden sm:flex flex-col items-end text-xs text-gray-500 font-mono">
+            <span>NETWORK: SECURE</span>
+            <span>DATA: REAL-TIME</span>
+         </div> -->
+      </div>
+
+      <!-- Centered Input Field -->
+      <div class="w-full max-w-[800px] mb-10 animate-fade-in-up opacity-0 anim-delay-100">
+         <app-chat-input></app-chat-input>
+      </div>
+
+      <!-- POS-style Quick Action Buttons -->
+      <div
+         class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-12 w-full max-w-[800px] px-2 animate-fade-in-up opacity-0 anim-delay-200">
+         <button (click)="sendSuggestion('Check local inventory for Macbook Pro')"
+            class="flex items-center gap-4 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 shadow-lg hover:border-green-500/40 transition-all group shadow-sm text-left relative overflow-hidden">
+            <div
+               class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center shrink-0 border border-green-500/20 group-hover:scale-110 transition-transform">
+               <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+               </svg>
+            </div>
+            <div class="flex flex-col min-w-0">
+               <span class="text-[14px] font-bold text-gray-200 truncate">Inventory Check</span>
+               <span class="text-[12px] text-gray-400 truncate group-hover:text-gray-300 transition-colors">"Local stock
+                  for Macbook Pro"</span>
+            </div>
+         </button>
+         <button (click)="sendSuggestion('Compare prices for iPhone 15')"
+            class="flex items-center gap-4 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 shadow-lg hover:border-blue-500/40 transition-all group shadow-sm text-left relative overflow-hidden">
+            <div
+               class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20 group-hover:scale-110 transition-transform">
+               <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                  </path>
+               </svg>
+            </div>
+            <div class="flex flex-col min-w-0">
+               <span class="text-[14px] font-bold text-gray-200 truncate">Price Compare</span>
+               <span class="text-[12px] text-gray-400 truncate group-hover:text-gray-300 transition-colors">"Compare
+                  iPhone 15 prices"</span>
+            </div>
+         </button>
+         <button (click)="sendSuggestion('Find verified grocery stores nearby')"
+            class="flex items-center gap-4 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 shadow-lg hover:border-yellow-500/40 transition-all group shadow-sm text-left relative overflow-hidden">
+            <div
+               class="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center shrink-0 border border-yellow-500/20 group-hover:scale-110 transition-transform">
+               <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                  </path>
+               </svg>
+            </div>
+            <div class="flex flex-col min-w-0">
+               <span class="text-[14px] font-bold text-gray-200 truncate">Verify Retailers</span>
+               <span class="text-[12px] text-gray-400 truncate group-hover:text-gray-300 transition-colors">"Find
+                  verified grocery stores"</span>
+            </div>
+         </button>
+         <button (click)="sendSuggestion('Are there any active sales or discounts nearby?')"
+            class="flex items-center gap-4 p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 shadow-lg hover:border-red-500/40 transition-all group shadow-sm text-left relative overflow-hidden">
+            <div
+               class="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center shrink-0 border border-red-500/20 group-hover:scale-110 transition-transform">
+               <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7">
+                  </path>
+               </svg>
+            </div>
+            <div class="flex flex-col min-w-0">
+               <span class="text-[14px] font-bold text-gray-200 truncate">Live Discounts</span>
+               <span class="text-[12px] text-gray-400 truncate group-hover:text-gray-300 transition-colors">"Active
+                  sales and discounts nearby"</span>
+            </div>
+         </button>
+      </div>
+
+      <!-- Verified Retailers Section -->
+      <div
+         class="w-full max-w-[800px] px-4 md:px-0 mb-6 animate-fade-in-up opacity-0 anim-delay-300 flex items-center justify-between border-b border-white/10 pb-3">
+         <div class="flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               class="text-green-500">
+               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <h3 class="text-[13px] font-bold text-gray-200 uppercase tracking-widest">Network Retailers</h3>
+         </div>
+         <span class="text-[10px] font-mono text-white flex items-center gap-1.5"><span
+               class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>LIVE FEED</span>
+      </div>
+
+      <!-- Suggestion Cards Grid -->
+      <div
+         class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-[800px] px-4 md:px-0 animate-fade-in-up opacity-0 anim-delay-400">
+
+         <!-- Card 1 -->
+         <button (click)="sendSuggestion('Tell me more about FreshMarket Organics')"
+            class="flex flex-col text-left p-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:border-white/40 hover:bg-white/20 transition-all duration-300 w-full group relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.25)]">
+            <div class="flex items-center gap-3 w-full mb-2">
+               <div
+                  class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center shrink-0 border border-green-500/20">
+                  <span class="text-green-500 text-lg leading-none">🥬</span>
+               </div>
+               <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                     <div class="font-semibold text-[15px] text-gray-100 truncate flex items-center gap-1.5">
+                        FreshMarket
+                        <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                           <path
+                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                     </div>
+                     <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="bg-yellow-500/10 text-yellow-500 px-1.5 py-0.5 rounded text-[11px] font-semibold">★
+                           4.8</span>
+                        <span class="text-[11px] text-gray-500">(1.2k)</span>
+                     </div>
+                  </div>
+                  <div class="text-[12px] text-gray-400 mt-0.5 truncate">0.8 miles away • <span
+                        class="text-green-400">Open</span></div>
+               </div>
+            </div>
+            <div class="text-[13px] text-gray-400 line-clamp-2 leading-relaxed">
+               Premium local organic groceries and fresh farm produce sourced daily.
+            </div>
+            <div
+               class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1.5 rounded-full shadow-lg">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="w-3 h-3 text-black">
+                  <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                     stroke-linejoin="round"></path>
+               </svg>
+            </div>
+         </button>
+
+         <!-- Card 2 -->
+         <button (click)="sendSuggestion('Is TechHaven World currently open?')"
+            class="flex flex-col text-left p-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:border-white/40 hover:bg-white/20 transition-all duration-300 w-full group relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.25)]">
+            <div class="flex items-center gap-3 w-full mb-2">
+               <div
+                  class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20">
+                  <span class="text-blue-500 text-lg leading-none">💻</span>
+               </div>
+               <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                     <div class="font-semibold text-[15px] text-gray-100 truncate flex items-center gap-1.5">
+                        TechHaven
+                        <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                           <path
+                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                     </div>
+                     <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="bg-yellow-500/10 text-yellow-500 px-1.5 py-0.5 rounded text-[11px] font-semibold">★
+                           4.2</span>
+                        <span class="text-[11px] text-gray-500">(850)</span>
+                     </div>
+                  </div>
+                  <div class="text-[12px] text-gray-400 mt-0.5 truncate">3.2 miles away • <span
+                        class="text-green-400">Open</span></div>
+               </div>
+            </div>
+            <div class="text-[13px] text-gray-400 line-clamp-2 leading-relaxed">
+               Latest consumer electronics, laptops, and gadgets superstore.
+            </div>
+            <div
+               class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1.5 rounded-full shadow-lg">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="w-3 h-3 text-black">
+                  <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                     stroke-linejoin="round"></path>
+               </svg>
+            </div>
+         </button>
+
+         <!-- Card 3 -->
+         <button (click)="sendSuggestion('What are the discounts at UrbanApparel?')"
+            class="flex flex-col text-left p-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:border-white/40 hover:bg-white/20 transition-all duration-300 w-full group relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.25)]">
+            <div class="flex items-center gap-3 w-full mb-2">
+               <div
+                  class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0 border border-purple-500/20">
+                  <span class="text-purple-500 text-lg leading-none">🛍️</span>
+               </div>
+               <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                     <div class="font-semibold text-[15px] text-gray-100 truncate flex items-center gap-1.5">
+                        UrbanApparel
+                        <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                           <path
+                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                     </div>
+                     <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="bg-yellow-500/10 text-yellow-500 px-1.5 py-0.5 rounded text-[11px] font-semibold">★
+                           4.5</span>
+                        <span class="text-[11px] text-gray-500">(3k)</span>
+                     </div>
+                  </div>
+                  <div class="text-[12px] text-gray-400 mt-0.5 truncate">Downtown • <span class="text-red-400">Closes
+                        soon</span></div>
+               </div>
+            </div>
+            <div class="text-[13px] text-gray-400 line-clamp-2 leading-relaxed">
+               Trendy, sustainable street fashion for modern men and women.
+            </div>
+            <div
+               class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1.5 rounded-full shadow-lg">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="w-3 h-3 text-black">
+                  <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                     stroke-linejoin="round"></path>
+               </svg>
+            </div>
+         </button>
+
+         <!-- Card 4 -->
+         <button (click)="sendSuggestion('Any bakery items at DailyBites?')"
+            class="flex flex-col text-left p-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:border-white/40 hover:bg-white/20 transition-all duration-300 w-full group relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.25)]">
+            <div class="flex items-center gap-3 w-full mb-2">
+               <div
+                  class="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0 border border-orange-500/20">
+                  <span class="text-orange-500 text-[16px] leading-none">🥐</span>
+               </div>
+               <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                     <div class="font-semibold text-[15px] text-gray-100 truncate flex items-center gap-1.5">
+                        DailyBites
+                        <svg class="w-3.5 h-3.5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                           <path
+                              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                     </div>
+                     <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="bg-yellow-500/10 text-yellow-500 px-1.5 py-0.5 rounded text-[11px] font-semibold">★
+                           4.9</span>
+                        <span class="text-[11px] text-gray-500">(420)</span>
+                     </div>
+                  </div>
+                  <div class="text-[12px] text-gray-400 mt-0.5 truncate">1.5 miles away • <span
+                        class="text-green-400">Open</span></div>
+               </div>
+            </div>
+            <div class="text-[13px] text-gray-400 line-clamp-2 leading-relaxed">
+               Artisan breads, pastries, coffee, and custom occasion cakes.
+            </div>
+            <div
+               class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1.5 rounded-full shadow-lg">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="w-3 h-3 text-black">
+                  <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                     stroke-linejoin="round"></path>
+               </svg>
+            </div>
+         </button>
+      </div>
+   </div>
+
+   <div *ngIf="chatService.messages().length > 0" class="flex flex-col gap-6 py-6 pb-6 max-w-[800px] mx-auto w-full">
+      <app-chat-message *ngFor="let msg of chatService.messages()" [message]="msg"></app-chat-message>
+
+      <div *ngIf="chatService.isTyping()" class="flex justify-start">
+         <div
+            class="w-8 h-8 rounded-full border border-white/20 shrink-0 flex items-center justify-center text-white mr-4 bg-transparent shadow-sm">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="text-white w-5 h-5">
+               <path d="M12 2l2.4 7.6 7.6 2.4-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z" />
+            </svg>
+         </div>
+         <div class="py-2.5 flex items-center text-gray-400">
+            <div class="flex gap-1.5 items-center h-full">
+               <span class="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0ms;"></span>
+               <span class="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 150ms;"></span>
+               <span class="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 300ms;"></span>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div *ngIf="chatService.messages().length > 0" class="shrink-0 w-full bg-transparent pt-2 px-3 md:px-0 z-40" style="padding-bottom: max(1rem, env(safe-area-inset-bottom));">
+   <div class="max-w-[800px] mx-auto w-full px-3 md:px-4 lg:px-0">
+      <app-chat-input></app-chat-input>
+   </div>
+</div>
