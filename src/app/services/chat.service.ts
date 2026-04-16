@@ -108,7 +108,7 @@ export class ChatService {
     this._syncCurrentSession(content);
 
     // 3. Real API Call
-    this.http.post<any>('http://127.0.0.1/api/chat', { message: content }).subscribe({
+    this.http.post<any>('http://157.245.24.224/api/chat', { message: content }).subscribe({
       next: (response) => {
         const botResponse = response.bot_response || 'Sorry, I did not understand that.';
         this.messages.update(msgs => [...msgs, {
