@@ -83,7 +83,7 @@ export class ChatService {
     if (typeof window !== 'undefined') {
       localStorage.setItem('chat_sessions', JSON.stringify(this.sessions()));
       localStorage.setItem('current_session_id', this.currentSessionId() || '');
-      
+
       const prod = this.selectedProduct();
       if (prod) {
         localStorage.setItem('selected_product', JSON.stringify(prod));
@@ -108,11 +108,11 @@ export class ChatService {
     this._syncCurrentSession(content);
 
     // 3. Real API Call
-    this.http.post<any>('http://127.0.0.1/api/chat', { message: content }).subscribe({
+    this.http.post<any>('http://157.245.24.224/api/chat', { message: content }).subscribe({
       next: (response) => {
         const botResponse = response.bot_response || 'Sorry, I did not understand that.';
-        this.messages.update(msgs => [...msgs, { 
-          role: 'assistant', 
+        this.messages.update(msgs => [...msgs, {
+          role: 'assistant',
           content: botResponse,
           products: response.products,
           intent: response.intent
