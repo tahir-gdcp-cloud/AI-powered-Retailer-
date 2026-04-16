@@ -19,57 +19,83 @@
     </div>
   </div>
 
-  <!-- Rich UI: Products Carousel (Full Edge-to-Edge Span) -->
-  <div *ngIf="message.products && message.products.length > 0" #carousel (wheel)="onWheel($event, carousel)"
-    class="w-full flex gap-4 overflow-x-auto pb-4 pt-4 hide-scrollbar px-4 sm:px-6 scroll-smooth">
+  <!-- Rich UI: Products Carousel (Constrained) -->
+  <div *ngIf="message.products && message.products.length > 0" class="relative group w-full max-w-[800px] mx-auto">
+    <!-- Left Navigation Arrow -->
+    <button *ngIf="message.products!.length > 2"
+      (click)="scrollCarousel(carousel, -1)"
+      class="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-10 w-7 h-7 sm:w-10 sm:h-10 bg-black/60 hover:bg-black/80 backdrop-blur-xl border border-white/20 text-white rounded-full flex items-center justify-center opacity-90 transition-all shadow-xl hover:scale-110 active:scale-95">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 sm:w-5 sm:h-5 mr-0.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
 
-    <div *ngFor="let product of message.products; let first = first; let last = last"
-      [class.ml-auto]="first" [class.mr-auto]="last"
-      (click)="chatService.setProduct(product)"
-      class="flex-none w-[220px] sm:w-[260px] bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg hover:bg-white/20 hover:border-teal-400/40 transition-all group flex flex-col cursor-pointer">
+    <div #carousel 
+      (wheel)="onWheel($event, carousel)"
+      (mousedown)="onMouseDown($event, carousel)"
+      (mouseleave)="onMouseLeave()"
+      (mouseup)="onMouseUp()"
+      (mousemove)="onMouseMove($event, carousel)"
+      class="w-full flex gap-4 overflow-x-auto pb-4 pt-4 hide-scrollbar px-4 md:px-2 cursor-grab active:cursor-grabbing select-none"
+      [class.scroll-smooth]="!isDown">
 
-      <div class="flex justify-between items-start mb-2 sm:mb-3">
-        <span
-          class="text-[9px] sm:text-[10px] font-bold tracking-wider uppercase text-teal-400 bg-teal-400/10 px-1.5 sm:px-2 py-0.5 rounded-full border border-teal-400/20">
-          {{ product.category }}
-        </span>
-        <span *ngIf="product.in_stock"
-          class="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-green-400 font-medium pt-0.5">
-          <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_5px_currentColor]"></span> In
-          Stock
-        </span>
-      </div>
+      <div *ngFor="let product of message.products; let first = first; let last = last"
+        [class.ml-auto]="first" [class.mr-auto]="last"
+        (click)="handleProductClick($event, product)"
+        class="flex-none w-[220px] sm:w-[260px] bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg hover:bg-white/20 hover:border-teal-400/40 transition-all group flex flex-col cursor-pointer">
 
-      <h4 class="text-[13px] sm:text-[15px] font-semibold text-white mb-1 sm:mb-1.5 leading-snug line-clamp-2"
-        [title]="product.product_name">
-        {{ product.product_name }}
-      </h4>
-      <div class="text-[15px] sm:text-[18px] font-bold text-white mb-3 sm:mb-4">
-        {{ product.price | currency:'PKR':'symbol-narrow':'1.0-0' }}
-      </div>
-
-      <div class="mt-auto pt-2 sm:pt-3 border-t border-white/10">
-        <div class="flex items-center gap-2 mb-1 sm:mb-1.5">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-3.5 h-3.5 text-gray-400 shrink-0">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg>
-          <span class="text-[11px] sm:text-[12px] font-medium text-gray-200 truncate" [title]="product.store.name">{{
-            product.store.name }}</span>
+        <div class="flex justify-between items-start mb-2 sm:mb-3">
+          <span
+            class="text-[9px] sm:text-[10px] font-bold tracking-wider uppercase text-teal-400 bg-teal-400/10 px-1.5 sm:px-2 py-0.5 rounded-full border border-teal-400/20">
+            {{ product.category }}
+          </span>
+          <span *ngIf="product.in_stock"
+            class="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-green-400 font-medium pt-0.5">
+            <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_5px_currentColor]"></span> In
+            Stock
+          </span>
         </div>
-        <div class="flex items-start gap-2">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 mt-0.5">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <span class="text-[10px] sm:text-[11px] text-gray-400 line-clamp-2 leading-snug">{{ product.store.location
-            }}</span>
+
+        <h4 class="text-[13px] sm:text-[15px] font-semibold text-white mb-1 sm:mb-1.5 leading-snug line-clamp-2"
+          [title]="product.product_name">
+          {{ product.product_name }}
+        </h4>
+        <div class="text-[15px] sm:text-[18px] font-bold text-white mb-3 sm:mb-4">
+          {{ product.price | currency:'PKR':'symbol-narrow':'1.0-0' }}
+        </div>
+
+        <div class="mt-auto pt-2 sm:pt-3 border-t border-white/10">
+          <div class="flex items-center gap-2 mb-1 sm:mb-1.5">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-3.5 h-3.5 text-gray-400 shrink-0">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span class="text-[11px] sm:text-[12px] font-medium text-gray-200 truncate" [title]="product.store.name">{{
+              product.store.name }}</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 mt-0.5">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="text-[10px] sm:text-[11px] text-gray-400 line-clamp-2 leading-snug">{{ product.store.location
+              }}</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Right Navigation Arrow -->
+    <button *ngIf="message.products!.length > 2"
+      (click)="scrollCarousel(carousel, 1)"
+      class="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-10 w-7 h-7 sm:w-10 sm:h-10 bg-black/60 hover:bg-black/80 backdrop-blur-xl border border-white/20 text-white rounded-full flex items-center justify-center opacity-90 transition-all shadow-xl hover:scale-110 active:scale-95">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="w-3 h-3 sm:w-5 sm:h-5 ml-0.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
   </div>
 
 </div>
