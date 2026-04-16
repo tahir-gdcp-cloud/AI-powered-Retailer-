@@ -271,10 +271,10 @@
       </div>
    </div>
 
-   <div *ngIf="chatService.messages().length > 0" class="flex flex-col gap-6 py-6 pb-6 max-w-[800px] mx-auto w-full">
-      <app-chat-message *ngFor="let msg of chatService.messages()" [message]="msg"></app-chat-message>
+   <div *ngIf="chatService.messages().length > 0" class="flex flex-col gap-6 py-6 pb-6 w-full">
+      <app-chat-message *ngFor="let msg of chatService.messages()" [message]="msg" class="w-full"></app-chat-message>
 
-      <div *ngIf="chatService.isTyping()" class="flex justify-start">
+      <div *ngIf="chatService.isTyping()" class="flex justify-start max-w-[800px] mx-auto w-full px-4 md:px-0">
          <div
             class="w-8 h-8 rounded-full border border-white/20 shrink-0 flex items-center justify-center text-white mr-4 bg-transparent shadow-sm">
             <svg viewBox="0 0 24 24" fill="currentColor" class="text-white w-5 h-5">

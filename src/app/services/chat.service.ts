@@ -1,9 +1,28 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+export interface ProductStore {
+  name: string;
+  location: string;
+  email: string;
+  contact: string;
+}
+
+export interface ChatProduct {
+  product_name: string;
+  category: string;
+  price: number;
+  in_stock: boolean;
+  stock_count: number;
+  sku: string;
+  store: ProductStore;
+}
+
 export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
+  products?: ChatProduct[];
+  intent?: string;
 }
 
 export interface ChatSession {
@@ -25,6 +44,7 @@ export class ChatService {
   sessions = signal<ChatSession[]>([]);
   currentSessionId = signal<string | null>(null);
   sessionToDelete = signal<string | null>(null);
+  selectedProduct = signal<ChatProduct | null>(null);
 
   private http = inject(HttpClient);
 
@@ -43,6 +63,15 @@ export class ChatService {
         }
       }
 
+      const activeProduct = localStorage.getItem('selected_product');
+      if (activeProduct) {
+        try {
+          this.selectedProduct.set(JSON.parse(activeProduct));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
       const activeId = localStorage.getItem('current_session_id');
       if (activeId) {
         this.loadSession(activeId, true); // true indicates initial load to avoid sidebar toggle side-effects
@@ -54,6 +83,13 @@ export class ChatService {
     if (typeof window !== 'undefined') {
       localStorage.setItem('chat_sessions', JSON.stringify(this.sessions()));
       localStorage.setItem('current_session_id', this.currentSessionId() || '');
+      
+      const prod = this.selectedProduct();
+      if (prod) {
+        localStorage.setItem('selected_product', JSON.stringify(prod));
+      } else {
+        localStorage.removeItem('selected_product');
+      }
     }
   }
 
@@ -75,7 +111,12 @@ export class ChatService {
     this.http.post<any>('http://127.0.0.1/api/chat', { message: content }).subscribe({
       next: (response) => {
         const botResponse = response.bot_response || 'Sorry, I did not understand that.';
-        this.messages.update(msgs => [...msgs, { role: 'assistant', content: botResponse }]);
+        this.messages.update(msgs => [...msgs, { 
+          role: 'assistant', 
+          content: botResponse,
+          products: response.products,
+          intent: response.intent
+        }]);
         this.isTyping.set(false);
         this._syncCurrentSession();
       },
@@ -151,5 +192,15 @@ export class ChatService {
       this.deleteSession(id);
       this.sessionToDelete.set(null);
     }
+  }
+
+  setProduct(product: ChatProduct | null) {
+    this.selectedProduct.set(product);
+    this.saveToLocalStorage();
+  }
+
+  clearSelectedProduct() {
+    this.selectedProduct.set(null);
+    this.saveToLocalStorage();
   }
 }
