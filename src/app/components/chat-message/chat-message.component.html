@@ -64,10 +64,10 @@
 
     <!-- Assistant Message View -->
     <div *ngIf="message.role === 'assistant'"
-      class="max-w-[85%] sm:max-w-[75%] bg-transparent text-gray-100 p-0 !pl-0 min-w-0 pt-1 text-[15px] leading-relaxed break-words whitespace-pre-wrap font-sans"
+      class="markdown-content max-w-[85%] sm:max-w-[75%] bg-transparent text-gray-100 p-0 !pl-0 min-w-0 pt-1 text-[15px] leading-relaxed break-words font-sans"
       [class.italic]="message.content.includes('cancelled')"
-      [class.text-gray-400]="message.content.includes('cancelled')">
-      {{ message.content }}
+      [class.text-gray-400]="message.content.includes('cancelled')"
+      [innerHTML]="message.content | markdown">
     </div>
   </div>
 

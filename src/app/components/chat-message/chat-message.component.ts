@@ -2,12 +2,14 @@ import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatMessage, ChatService } from '../../services/chat.service';
 import { FormsModule } from '@angular/forms';
+import { MarkdownPipe } from '../../pipes/markdown.pipe';
 
 @Component({
   selector: 'app-chat-message',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './chat-message.component.html'
+  imports: [CommonModule, FormsModule, MarkdownPipe],
+  templateUrl: './chat-message.component.html',
+  styleUrl: './chat-message.component.css'
 })
 export class ChatMessageComponent {
   @Input({ required: true }) message!: ChatMessage;
