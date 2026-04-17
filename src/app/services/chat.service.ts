@@ -161,7 +161,7 @@ export class ChatService {
       // Add a status message to the chat history
       this.messages.update(msgs => [...msgs, {
         role: 'assistant',
-        content: 'The response generation was cancelled...'
+        content: 'The response generation was cancelled !'
       }]);
       this._syncCurrentSession();
     }
