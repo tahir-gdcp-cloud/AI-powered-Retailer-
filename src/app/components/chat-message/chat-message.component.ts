@@ -1,16 +1,62 @@
 import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatMessage, ChatService } from '../../services/chat.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-message',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './chat-message.component.html'
 })
 export class ChatMessageComponent {
   @Input({ required: true }) message!: ChatMessage;
   chatService = inject(ChatService);
+
+  isEditing = false;
+  editedContent = '';
+  showCopySuccess = false;
+
+  copyToClipboard() {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(this.message.content).then(() => {
+        this.showCopySuccess = true;
+        setTimeout(() => this.showCopySuccess = false, 2000);
+      });
+    }
+  }
+
+  startEdit() {
+    if (this.message.role === 'user') {
+      this.isEditing = true;
+      this.editedContent = this.message.content;
+      // Auto-resize on next tick to ensure DOM is ready
+      setTimeout(() => {
+        const textarea = document.querySelector('textarea.edit-textarea') as HTMLTextAreaElement;
+        if (textarea) this.adjustTextAreaHeight(textarea);
+      }, 0);
+    }
+  }
+
+  onEditInput(event: Event) {
+    this.adjustTextAreaHeight(event.target as HTMLTextAreaElement);
+  }
+
+  private adjustTextAreaHeight(textarea: HTMLTextAreaElement) {
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }
+
+  cancelEdit() {
+    this.isEditing = false;
+  }
+
+  saveEdit() {
+    if (this.editedContent.trim() && this.editedContent !== this.message.content) {
+      this.chatService.resendFromMessage(this.message, this.editedContent);
+    }
+    this.isEditing = false;
+  }
 
   isDown = false;
   startX = 0;

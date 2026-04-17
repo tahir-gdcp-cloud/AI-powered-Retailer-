@@ -15,7 +15,7 @@
       class="m-0 flex-1 resize-none border-0 bg-transparent py-[14px] md:py-4 pl-4 pr-12 text-[14px] md:text-[16px] text-white focus:ring-0 focus-visible:ring-0 outline-none max-h-[200px] overflow-y-auto transition-all placeholder:truncate placeholder:whitespace-nowrap placeholder:overflow-hidden placeholder:w-full hide-scrollbar"
       style="min-height: 50px;"></textarea>
 
-    <button (click)="sendMessage()" [disabled]="!messageContent.trim()"
+    <button *ngIf="!chatService.isTyping()" (click)="sendMessage()" [disabled]="!messageContent.trim()"
       class="absolute right-2 md:right-3 shrink-0 rounded-full p-1.5 md:p-2 transition-colors flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bottom-2 md:bottom-2"
       [ngClass]="messageContent.trim() ? 'bg-white text-black hover:bg-gray-200' : 'bg-[#334155] text-gray-500 cursor-not-allowed'">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
@@ -23,6 +23,11 @@
         <line x1="22" y1="2" x2="11" y2="13"></line>
         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
       </svg>
+    </button>
+
+    <button *ngIf="chatService.isTyping()" (click)="stopGeneration()"
+      class="absolute right-2 md:right-3 shrink-0 rounded-full p-1.5 md:p-2 bg-white text-black hover:bg-gray-200 transition-colors flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bottom-2 md:bottom-2">
+      <div class="w-3 h-3 md:w-4 md:h-4 bg-black rounded-sm"></div>
     </button>
   </div>
   <div class="text-center text-xs text-neutral-400 mt-3 font-sans">

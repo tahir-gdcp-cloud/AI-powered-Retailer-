@@ -56,4 +56,8 @@ export class ChatInputComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  stopGeneration() {
+    this.chatService.stopGeneration();
+  }
 }

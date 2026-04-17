@@ -1,5 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 
 export interface ProductStore {
   name: string;
@@ -47,6 +48,7 @@ export class ChatService {
   selectedProduct = signal<ChatProduct | null>(null);
 
   private http = inject(HttpClient);
+  private chatSubscription: Subscription | null = null;
 
   constructor() {
     this.loadFromLocalStorage();
@@ -102,13 +104,35 @@ export class ChatService {
 
     // 1. Update live UI messages
     this.messages.update(msgs => [...msgs, { role: 'user', content }]);
-    this.isTyping.set(true);
 
     // 2. Sync to current session or create one
     this._syncCurrentSession(content);
 
-    // 3. Real API Call
-    this.http.post<any>('http://127.0.0.1/api/chat', { message: content }).subscribe({
+    // 3. Trigger Request
+    this._executeChatRequest(content);
+  }
+
+  resendFromMessage(originalMessage: ChatMessage, newContent: string) {
+    const msgs = this.messages();
+    const index = msgs.indexOf(originalMessage);
+    if (index === -1) return;
+
+    // 1. Truncate messages to this point and update the current message content
+    const truncatedMsgs = msgs.slice(0, index);
+    truncatedMsgs.push({ ...originalMessage, content: newContent });
+    this.messages.set(truncatedMsgs);
+
+    // 2. Clear product view to focus on new generation
+    this.selectedProduct.set(null);
+
+    // 3. Sync and trigger
+    this._syncCurrentSession();
+    this._executeChatRequest(newContent);
+  }
+
+  private _executeChatRequest(content: string) {
+    this.isTyping.set(true);
+    this.chatSubscription = this.http.post<any>('http://157.245.24.224/api/chat', { message: content }).subscribe({
       next: (response) => {
         const botResponse = response.bot_response || 'Sorry, I did not understand that.';
         this.messages.update(msgs => [...msgs, {
@@ -127,6 +151,21 @@ export class ChatService {
         this._syncCurrentSession();
       }
     });
+  }
+
+  stopGeneration() {
+    if (this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
+      this.chatSubscription = null;
+
+      // Add a status message to the chat history
+      this.messages.update(msgs => [...msgs, {
+        role: 'assistant',
+        content: 'The response generation was cancelled...'
+      }]);
+      this._syncCurrentSession();
+    }
+    this.isTyping.set(false);
   }
 
   private _syncCurrentSession(initialContent?: string) {
