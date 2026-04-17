@@ -108,7 +108,7 @@ export class ChatService {
     this._syncCurrentSession(content);
 
     // 3. Real API Call
-    this.http.post<any>('http://157.245.24.224/api/chat', { message: content }).subscribe({
+    this.http.post<any>('http://127.0.0.1/api/chat', { message: content }).subscribe({
       next: (response) => {
         const botResponse = response.bot_response || 'Sorry, I did not understand that.';
         this.messages.update(msgs => [...msgs, {
@@ -153,7 +153,13 @@ export class ChatService {
   clearChat() {
     this.messages.set([]);
     this.currentSessionId.set(null);
+    this.selectedProduct.set(null);
     this.saveToLocalStorage();
+
+    // On mobile, auto-close sidebar when starting new chat
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      this.isSidebarOpen.set(false);
+    }
   }
 
   loadSession(id: string, isInitialLoad = false) {
@@ -161,6 +167,12 @@ export class ChatService {
     if (session) {
       this.messages.set(session.messages);
       this.currentSessionId.set(session.id);
+
+      // Only clear product view on manual selection, not initial app boot
+      if (!isInitialLoad) {
+        this.selectedProduct.set(null);
+      }
+
       this.saveToLocalStorage();
       // On mobile, auto-close sidebar when loading a chat (but skip if initial page load)
       if (!isInitialLoad && typeof window !== 'undefined' && window.innerWidth < 768) {
