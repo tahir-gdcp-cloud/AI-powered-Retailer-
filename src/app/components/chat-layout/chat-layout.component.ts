@@ -5,11 +5,12 @@ import { ChatMainComponent } from '../chat-main/chat-main.component';
 import { NetworkBackgroundComponent } from '../network-background/network-background.component';
 import { ChatService } from '../../services/chat.service';
 import { ProductDetailsComponent } from '../product-details/product-details.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-chat-layout',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, ChatMainComponent, NetworkBackgroundComponent, ProductDetailsComponent],
+  imports: [CommonModule, SidebarComponent, ChatMainComponent, NetworkBackgroundComponent, ProductDetailsComponent, RouterModule],
   templateUrl: './chat-layout.component.html'
 })
 export class ChatLayoutComponent {

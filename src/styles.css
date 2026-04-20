@@ -7,11 +7,9 @@
   html, body {
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
     overscroll-behavior: none;
-    position: fixed;
-    top: 0;
-    left: 0;
+    background-color: #0b1121;
   }
   
   body {
