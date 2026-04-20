@@ -27,7 +27,7 @@ export class NetworkBackgroundComponent implements AfterViewInit, OnDestroy {
   // Configuration
   private readonly particleCount = 100; // Will be scaled by screen size
   private readonly connectionDistance = 150;
-  private readonly particleSpeed = 0.5;
+  private readonly particleSpeed = 2.5;
 
   constructor(
     private ngZone: NgZone,
@@ -99,7 +99,7 @@ export class NetworkBackgroundComponent implements AfterViewInit, OnDestroy {
 
     // Adjust particle count based on screen size (density)
     const area = window.innerWidth * window.innerHeight;
-    const count = Math.min(Math.floor(area / 10000), 200); // 1 particle per 10k pixels, max 200
+    const count = Math.min(Math.floor(area / 7000), 200); // 1 particle per 10k pixels, max 200
 
     for (let i = 0; i < count; i++) {
       const radius = Math.random() * 2 + 1;
