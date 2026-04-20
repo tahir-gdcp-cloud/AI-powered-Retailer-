@@ -6,6 +6,7 @@ import { NetworkBackgroundComponent } from '../network-background/network-backgr
 import { ChatService } from '../../services/chat.service';
 import { ProductDetailsComponent } from '../product-details/product-details.component';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-chat-layout',
@@ -15,4 +16,9 @@ import { RouterModule } from '@angular/router';
 })
 export class ChatLayoutComponent {
   chatService = inject(ChatService);
+  authService = inject(AuthService);
+
+  logout() {
+    this.authService.confirmLogout();
+  }
 }

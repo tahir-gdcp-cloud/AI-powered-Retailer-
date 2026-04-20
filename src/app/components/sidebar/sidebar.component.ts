@@ -1,16 +1,28 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatService } from '../../services/chat.service';
+import { AuthService } from '../../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
   chatService = inject(ChatService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  get userName(): string | null {
+    return this.authService.userName();
+  }
+
+  logout() {
+    this.authService.confirmLogout();
+  }
 
   get sessionToDelete() {
     return this.chatService.sessionToDelete();
