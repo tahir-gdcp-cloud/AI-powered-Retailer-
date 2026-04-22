@@ -10,14 +10,14 @@ import { Router } from '@angular/router';
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  
+
   // Using the host found in chat.service.ts
-  private baseUrl = 'http://127.0.0.1:5000/auth';
+  private baseUrl = 'http://67.207.76.73/auth';
 
   // Profile Signals
   userName = signal<string | null>(null);
   userEmail = signal<string | null>(null);
-  
+
   // Logout Confirmation State
   isLogoutConfirmOpen = signal(false);
 
@@ -37,7 +37,7 @@ export class AuthService {
       tap(response => {
         if (response.access_token) {
           localStorage.setItem('access_token', response.access_token);
-          
+
           // Store profile details
           if (name) {
             localStorage.setItem('user_name', name);
@@ -76,7 +76,7 @@ export class AuthService {
     localStorage.removeItem('user_email');
     localStorage.removeItem('chat_sessions');
     localStorage.removeItem('current_session_id');
-    
+
     this.userName.set(null);
     this.userEmail.set(null);
   }
