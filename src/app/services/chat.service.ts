@@ -249,10 +249,24 @@ export class ChatService {
       this.abortController = null;
 
       if (addCancelMessage) {
-        this.messages.update(msgs => [...msgs, {
-          role: 'assistant',
-          content: 'The response generation was cancelled !'
-        }]);
+        this.messages.update(msgs => {
+          const newMsgs = [...msgs];
+          const lastMsg = newMsgs[newMsgs.length - 1];
+
+          if (lastMsg && lastMsg.role === 'assistant') {
+            if (!lastMsg.content) {
+              lastMsg.content = 'The response generation was cancelled !';
+            } else {
+              lastMsg.content += '\n\n*The response generation was cancelled !*';
+            }
+          } else {
+            newMsgs.push({
+              role: 'assistant',
+              content: 'The response generation was cancelled !'
+            });
+          }
+          return newMsgs;
+        });
         this._syncCurrentSession();
       }
     }
