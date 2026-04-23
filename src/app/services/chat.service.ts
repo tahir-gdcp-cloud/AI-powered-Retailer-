@@ -183,7 +183,7 @@ export class ChatService {
               if (dataStr) {
                 try {
                   const data = JSON.parse(dataStr);
-                  
+
                   if (data.type === 'metadata') {
                     this.messages.update(msgs => {
                       const newMsgs = [...msgs];
@@ -220,6 +220,7 @@ export class ChatService {
           }
         }
       }
+      this.abortController = null;
       this.isTyping.set(false);
       this._syncCurrentSession();
     } catch (err: any) {
@@ -236,6 +237,7 @@ export class ChatService {
           return newMsgs;
         });
       }
+      this.abortController = null;
       this.isTyping.set(false);
       this._syncCurrentSession();
     }
@@ -284,7 +286,7 @@ export class ChatService {
   }
 
   clearChat() {
-    this._abortOngoingRequest(true);
+    this._abortOngoingRequest(false);
     this.messages.set([]);
     this.currentSessionId.set(null);
     this.selectedProduct.set(null);
@@ -299,7 +301,7 @@ export class ChatService {
   loadSession(id: string, isInitialLoad = false) {
     const session = this.sessions().find(s => s.id === id);
     if (session) {
-      this._abortOngoingRequest(true);
+      this._abortOngoingRequest(false);
       this.messages.set(session.messages);
       this.currentSessionId.set(session.id);
 
@@ -318,7 +320,7 @@ export class ChatService {
 
   deleteSession(id: string) {
     if (this.currentSessionId() === id) {
-      this._abortOngoingRequest(true);
+      this._abortOngoingRequest(false);
       this.sessions.update(s => s.filter(session => session.id !== id));
       this.clearChat();
       this.router.navigate(['/chat']);

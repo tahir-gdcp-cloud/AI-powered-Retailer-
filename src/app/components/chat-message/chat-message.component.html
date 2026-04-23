@@ -68,14 +68,14 @@
       [ngClass]="message.content ? 'px-6 py-4' : 'px-4 py-3 w-fit'"
       [class.italic]="message.content.includes('cancelled')"
       [class.text-gray-400]="message.content.includes('cancelled')">
-      
+
       <!-- Typing Indicator while streaming hasn't yielded content yet -->
       <div *ngIf="!message.content" class="flex items-center text-gray-400/80 h-4">
-         <div class="flex gap-1 items-center h-full">
-            <span class="w-1.5 h-1.5 rounded-full bg-current animate-bounce" style="animation-delay: 0ms;"></span>
-            <span class="w-1.5 h-1.5 rounded-full bg-current animate-bounce" style="animation-delay: 150ms;"></span>
-            <span class="w-1.5 h-1.5 rounded-full bg-current animate-bounce" style="animation-delay: 300ms;"></span>
-         </div>
+        <div class="flex gap-1 items-center h-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-current animate-bounce" style="animation-delay: 0ms;"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-current animate-bounce" style="animation-delay: 150ms;"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-current animate-bounce" style="animation-delay: 300ms;"></span>
+        </div>
       </div>
 
       <!-- Markdown Content -->
