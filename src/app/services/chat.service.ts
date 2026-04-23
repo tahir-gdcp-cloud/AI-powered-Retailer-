@@ -50,7 +50,7 @@ export class ChatService {
 
   private http = inject(HttpClient);
   private router = inject(Router);
-  private chatSubscription: Subscription | null = null;
+  private abortController: AbortController | null = null;
 
   constructor() {
     this.loadFromLocalStorage();
@@ -132,33 +132,119 @@ export class ChatService {
     this._executeChatRequest(newContent);
   }
 
-  private _executeChatRequest(content: string) {
+  private async _executeChatRequest(content: string) {
     this.isTyping.set(true);
-    this.chatSubscription = this.http.post<any>('http://157.245.24.224/api/chat', { message: content }).subscribe({
-      next: (response) => {
-        const botResponse = response.bot_response || 'Sorry, I did not understand that.';
-        this.messages.update(msgs => [...msgs, {
-          role: 'assistant',
-          content: botResponse,
-          products: response.products,
-          intent: response.intent
-        }]);
-        this.isTyping.set(false);
-        this._syncCurrentSession();
-      },
-      error: (err) => {
-        console.error('Chat API Error:', err);
-        this.messages.update(msgs => [...msgs, { role: 'assistant', content: 'An error occurred while communicating with the AI. Please try again later.' }]);
-        this.isTyping.set(false);
-        this._syncCurrentSession();
+    this.abortController = new AbortController();
+
+    // Add empty placeholder message that we will stream into
+    this.messages.update(msgs => [...msgs, {
+      role: 'assistant',
+      content: '',
+      products: [],
+      intent: ''
+    }]);
+
+    try {
+      const response = await fetch('http://127.0.0.1:80/api/chat/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/event-stream'
+        },
+        body: JSON.stringify({ message: content }),
+        signal: this.abortController.signal
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    });
+
+      if (!response.body) {
+        throw new Error('ReadableStream not supported in this browser.');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let done = false;
+      let buffer = '';
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+
+        if (value) {
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n\n');
+          buffer = lines.pop() || ''; // Keep the last incomplete chunk in the buffer
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const dataStr = line.substring(6).trim();
+              if (dataStr) {
+                try {
+                  const data = JSON.parse(dataStr);
+                  
+                  if (data.type === 'metadata') {
+                    this.messages.update(msgs => {
+                      const newMsgs = [...msgs];
+                      const lastMsg = { ...newMsgs[newMsgs.length - 1] };
+                      lastMsg.products = data.products;
+                      lastMsg.intent = data.intent;
+                      newMsgs[newMsgs.length - 1] = lastMsg;
+                      return newMsgs;
+                    });
+                  } else if (data.type === 'chunk') {
+                    this.messages.update(msgs => {
+                      const newMsgs = [...msgs];
+                      const lastMsg = { ...newMsgs[newMsgs.length - 1] };
+                      lastMsg.content += data.text;
+                      newMsgs[newMsgs.length - 1] = lastMsg;
+                      return newMsgs;
+                    });
+                  } else if (data.type === 'error') {
+                    this.messages.update(msgs => {
+                      const newMsgs = [...msgs];
+                      const lastMsg = { ...newMsgs[newMsgs.length - 1] };
+                      lastMsg.content = data.text;
+                      newMsgs[newMsgs.length - 1] = lastMsg;
+                      return newMsgs;
+                    });
+                  } else if (data.type === 'end') {
+                    // Done
+                  }
+                } catch (e) {
+                  console.error('Error parsing SSE chunk:', e, dataStr);
+                }
+              }
+            }
+          }
+        }
+      }
+      this.isTyping.set(false);
+      this._syncCurrentSession();
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        console.log('Fetch aborted');
+      } else {
+        console.error('Chat API Error:', err);
+        this.messages.update(msgs => {
+          const newMsgs = [...msgs];
+          const lastMsg = newMsgs[newMsgs.length - 1];
+          if (!lastMsg.content) {
+            lastMsg.content = 'An error occurred while communicating with the AI. Please try again later.';
+          }
+          return newMsgs;
+        });
+      }
+      this.isTyping.set(false);
+      this._syncCurrentSession();
+    }
   }
 
   private _abortOngoingRequest(addCancelMessage: boolean = false) {
-    if (this.chatSubscription) {
-      this.chatSubscription.unsubscribe();
-      this.chatSubscription = null;
+    if (this.abortController) {
+      this.abortController.abort();
+      this.abortController = null;
 
       if (addCancelMessage) {
         this.messages.update(msgs => [...msgs, {
