@@ -1,6 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface ProductStore {
   name: string;
@@ -48,6 +49,7 @@ export class ChatService {
   selectedProduct = signal<ChatProduct | null>(null);
 
   private http = inject(HttpClient);
+  private router = inject(Router);
   private chatSubscription: Subscription | null = null;
 
   constructor() {
@@ -153,19 +155,24 @@ export class ChatService {
     });
   }
 
-  stopGeneration() {
+  private _abortOngoingRequest(addCancelMessage: boolean = false) {
     if (this.chatSubscription) {
       this.chatSubscription.unsubscribe();
       this.chatSubscription = null;
 
-      // Add a status message to the chat history
-      this.messages.update(msgs => [...msgs, {
-        role: 'assistant',
-        content: 'The response generation was cancelled !'
-      }]);
-      this._syncCurrentSession();
+      if (addCancelMessage) {
+        this.messages.update(msgs => [...msgs, {
+          role: 'assistant',
+          content: 'The response generation was cancelled !'
+        }]);
+        this._syncCurrentSession();
+      }
     }
     this.isTyping.set(false);
+  }
+
+  stopGeneration() {
+    this._abortOngoingRequest(true);
   }
 
   private _syncCurrentSession(initialContent?: string) {
@@ -180,6 +187,7 @@ export class ChatService {
       };
       this.sessions.update(s => [newSession, ...s]);
       this.currentSessionId.set(newSession.id);
+      this.router.navigate(['/chat', newSession.id]);
     } else {
       // Update existing session
       this.sessions.update(sessions =>
@@ -190,6 +198,7 @@ export class ChatService {
   }
 
   clearChat() {
+    this._abortOngoingRequest(true);
     this.messages.set([]);
     this.currentSessionId.set(null);
     this.selectedProduct.set(null);
@@ -204,6 +213,7 @@ export class ChatService {
   loadSession(id: string, isInitialLoad = false) {
     const session = this.sessions().find(s => s.id === id);
     if (session) {
+      this._abortOngoingRequest(true);
       this.messages.set(session.messages);
       this.currentSessionId.set(session.id);
 
@@ -221,10 +231,13 @@ export class ChatService {
   }
 
   deleteSession(id: string) {
-    this.sessions.update(s => s.filter(session => session.id !== id));
     if (this.currentSessionId() === id) {
+      this._abortOngoingRequest(true);
+      this.sessions.update(s => s.filter(session => session.id !== id));
       this.clearChat();
+      this.router.navigate(['/chat']);
     } else {
+      this.sessions.update(s => s.filter(session => session.id !== id));
       this.saveToLocalStorage();
     }
   }

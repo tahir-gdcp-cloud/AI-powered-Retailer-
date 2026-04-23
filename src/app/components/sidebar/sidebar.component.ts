@@ -30,10 +30,12 @@ export class SidebarComponent {
 
   newChat() {
     this.chatService.clearChat();
+    this.router.navigate(['/chat']);
   }
 
   loadSession(id: string) {
     this.chatService.loadSession(id);
+    this.router.navigate(['/chat', id]);
   }
 
   confirmDelete(id: string, event: Event) {
