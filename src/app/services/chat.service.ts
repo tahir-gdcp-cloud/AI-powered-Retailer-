@@ -145,7 +145,7 @@ export class ChatService {
     }]);
 
     try {
-      const response = await fetch('http://127.0.0.1:80/api/chat/stream', {
+      const response = await fetch('http://157.245.24.224/api/chat/stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
