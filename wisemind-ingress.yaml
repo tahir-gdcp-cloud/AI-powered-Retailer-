@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wisemind-frontend-ingress
+spec:
+  ingressClassName: nginx  # This now matches your 'kubectl get ingressclasses'
+  rules:
+  - host: wisemind.techbits.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-chat-ui
+            port:
+              number: 80

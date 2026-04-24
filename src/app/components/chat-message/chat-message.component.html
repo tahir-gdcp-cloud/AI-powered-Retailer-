@@ -63,7 +63,7 @@
     </div>
 
     <!-- Assistant Message View -->
-    <div *ngIf="message.role === 'assistant'"
+    <div *ngIf="message.role === 'assistant' && (message.content || (!message.products || message.products.length === 0))"
       class="markdown-content max-w-[85%] sm:max-w-[75%] bg-slate-900/40 backdrop-blur-md rounded-3xl text-gray-100 min-w-0 text-[15px] leading-relaxed break-words font-sans shadow-lg"
       [ngClass]="message.content ? 'px-6 py-4' : 'px-4 py-3 w-fit'"
       [class.italic]="message.content.includes('cancelled')"
