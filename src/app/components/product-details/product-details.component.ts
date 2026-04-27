@@ -22,7 +22,9 @@ export class ProductDetailsComponent {
     const msgs = this.chatService.messages();
     for (let i = msgs.length - 1; i >= 0; i--) {
       if (msgs[i].products && msgs[i].products!.length > 0) {
-        return msgs[i].products!.filter((p: ChatProduct) => p.sku !== current.sku);
+        return msgs[i].products!.filter((p: ChatProduct) => 
+          p.sku !== current.sku && p.store.name === current.store.name
+        );
       }
     }
     return [];
