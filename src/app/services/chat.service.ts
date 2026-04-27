@@ -145,11 +145,11 @@ export class ChatService {
     }]);
 
     try {
-      const response = await fetch('http://157.245.24.224/api/chat/stream', {
+      const response = await fetch('http://127.0.0.1:80/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'text/event-stream'
+          'Accept': 'application/json'
         },
         body: JSON.stringify({ message: content }),
         signal: this.abortController.signal
@@ -159,67 +159,20 @@ export class ChatService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      if (!response.body) {
-        throw new Error('ReadableStream not supported in this browser.');
-      }
+      const data = await response.json();
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder('utf-8');
-      let done = false;
-      let buffer = '';
+      this.messages.update(msgs => {
+        const newMsgs = [...msgs];
+        const lastMsg = { ...newMsgs[newMsgs.length - 1] };
 
-      while (!done) {
-        const { value, done: readerDone } = await reader.read();
-        done = readerDone;
+        lastMsg.content = data.bot_response || '';
+        lastMsg.products = data.products || [];
+        lastMsg.intent = data.intent || '';
 
-        if (value) {
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n\n');
-          buffer = lines.pop() || ''; // Keep the last incomplete chunk in the buffer
+        newMsgs[newMsgs.length - 1] = lastMsg;
+        return newMsgs;
+      });
 
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const dataStr = line.substring(6).trim();
-              if (dataStr) {
-                try {
-                  const data = JSON.parse(dataStr);
-
-                  if (data.type === 'metadata') {
-                    this.messages.update(msgs => {
-                      const newMsgs = [...msgs];
-                      const lastMsg = { ...newMsgs[newMsgs.length - 1] };
-                      lastMsg.products = data.products;
-                      lastMsg.intent = data.intent;
-                      newMsgs[newMsgs.length - 1] = lastMsg;
-                      return newMsgs;
-                    });
-                  } else if (data.type === 'chunk') {
-                    this.messages.update(msgs => {
-                      const newMsgs = [...msgs];
-                      const lastMsg = { ...newMsgs[newMsgs.length - 1] };
-                      lastMsg.content += data.text;
-                      newMsgs[newMsgs.length - 1] = lastMsg;
-                      return newMsgs;
-                    });
-                  } else if (data.type === 'error') {
-                    this.messages.update(msgs => {
-                      const newMsgs = [...msgs];
-                      const lastMsg = { ...newMsgs[newMsgs.length - 1] };
-                      lastMsg.content = data.text;
-                      newMsgs[newMsgs.length - 1] = lastMsg;
-                      return newMsgs;
-                    });
-                  } else if (data.type === 'end') {
-                    // Done
-                  }
-                } catch (e) {
-                  console.error('Error parsing SSE chunk:', e, dataStr);
-                }
-              }
-            }
-          }
-        }
-      }
       this.abortController = null;
       this.isTyping.set(false);
       this._syncCurrentSession();
