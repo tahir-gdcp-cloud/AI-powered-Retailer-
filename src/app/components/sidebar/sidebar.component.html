@@ -56,7 +56,7 @@
       <ng-container *ngIf="userName">
         <div class="flex items-center gap-3 overflow-hidden">
           <div class="w-8 h-8 shrink-0 rounded-full bg-[#10a37f] flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-[#10a37f]/20">
-            {{ userName?.charAt(0) || 'U' }}
+            {{ userName.charAt(0) || 'U' }}
           </div>
           <div class="text-xs text-white font-medium truncate max-w-[120px]">
             {{ userName }}

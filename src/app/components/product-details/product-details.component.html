@@ -209,13 +209,11 @@
 
         </div>
       </div>
-    </div>
-  </div>
 
   <!-- Related Products Carousel -->
   <div *ngIf="relatedProducts.length > 0" class="mt-10 relative group w-full max-w-[800px] mx-auto px-4 md:px-0">
     <h3 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4 px-1 border-b border-white/5 pb-2">
-      More from {{ product?.store?.name }}</h3>
+      More from {{ product.store.name }}</h3>
 
     <!-- Left Navigation Arrow -->
     <button *ngIf="relatedProducts.length > 2" (click)="scrollCarousel(carousel, -1)"
@@ -288,5 +286,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
       </svg>
     </button>
+    </div>
   </div>
+</div>
 </div>
