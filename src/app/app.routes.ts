@@ -5,6 +5,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'chat', pathMatch: 'full' },
   { path: 'chat', component: ChatLayoutComponent },
   { path: 'chat/:id', component: ChatLayoutComponent },
+  { path: 'checkout', loadComponent: () => import('./components/checkout/checkout.component').then(m => m.CheckoutComponent) },
   { path: 'login', loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) },
   { path: '**', redirectTo: 'chat' }
 ];

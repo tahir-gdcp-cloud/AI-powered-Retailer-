@@ -1,0 +1,175 @@
+<div class="relative min-h-screen overflow-hidden text-white">
+  <div class="fixed inset-0">
+    <app-network-background></app-network-background>
+    <div class="absolute  bg-[#02040d]/90 backdrop-blur-[1px]"></div>
+  </div>
+
+  <div class="relative z-10 px-4 py-8 sm:px-6 lg:px-10">
+    <div class="mx-auto w-full max-w-4xl">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-8">
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-black tracking-tight">Checkout</h1>
+          <p class="text-sm text-gray-400 mt-2">Review your details and confirm your purchase.</p>
+        </div>
+        <a routerLink="/chat"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-teal-300 hover:text-white transition-all">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to product
+        </a>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <section class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-xl">
+        <div class="mb-6">
+          <span class="text-[10px] font-black uppercase tracking-[0.3em] text-teal-300">Billing & shipping</span>
+          <h2 class="mt-3 text-2xl font-bold text-white">Customer information</h2>
+        </div>
+
+        <div class="grid gap-4 lg:grid-cols-2">
+          <label class="block text-sm text-gray-300">
+            <span class="mb-2 block text-xs uppercase tracking-[0.24em] text-gray-400">Full name</span>
+            <input type="text" [(ngModel)]="form.fullName"
+              class="w-full rounded-2xl border border-white/10 bg-[#0b1120] px-4 py-3 text-white outline-none focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20" />
+          </label>
+
+          <label class="block text-sm text-gray-300">
+            <span class="mb-2 block text-xs uppercase tracking-[0.24em] text-gray-400">Email</span>
+            <input type="email" [(ngModel)]="form.email"
+              class="w-full rounded-2xl border border-white/10 bg-[#0b1120] px-4 py-3 text-white outline-none focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20" />
+          </label>
+
+          <label class="block text-sm text-gray-300">
+            <span class="mb-2 block text-xs uppercase tracking-[0.24em] text-gray-400">Phone</span>
+            <input type="tel" [(ngModel)]="form.phone"
+              class="w-full rounded-2xl border border-white/10 bg-[#0b1120] px-4 py-3 text-white outline-none focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20" />
+          </label>
+
+          <label class="block text-sm text-gray-300">
+            <span class="mb-2 block text-xs uppercase tracking-[0.24em] text-gray-400">Address</span>
+            <input type="text" [(ngModel)]="form.address"
+              class="w-full rounded-2xl border border-white/10 bg-[#0b1120] px-4 py-3 text-white outline-none focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20" />
+          </label>
+        </div>
+
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          <label class="block text-sm text-gray-300">
+            <span class="mb-2 block text-xs uppercase tracking-[0.24em] text-gray-400">City</span>
+            <input type="text" [(ngModel)]="form.city"
+              class="w-full rounded-2xl border border-white/10 bg-[#0b1120] px-4 py-3 text-white outline-none focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20" />
+          </label>
+          <label class="block text-sm text-gray-300">
+            <span class="mb-2 block text-xs uppercase tracking-[0.24em] text-gray-400">Postal code</span>
+            <input type="text" [(ngModel)]="form.postal"
+              class="w-full rounded-2xl border border-white/10 bg-[#0b1120] px-4 py-3 text-white outline-none focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20" />
+          </label>
+        </div>
+
+        <div class="mt-8 rounded-[1.75rem] border border-teal-400/20 bg-[#09101f]/80 p-5 shadow-inner shadow-teal-500/5">
+          <div class="flex items-center justify-between text-sm text-gray-400 mb-4">
+            <span>Payment method</span>
+            <span class="text-xs uppercase tracking-[0.24em] text-teal-200">Select one</span>
+          </div>
+
+          <div class="grid gap-3">
+            <label class="flex cursor-pointer items-center gap-3 rounded-3xl border border-white/10 bg-black/30 p-4 transition hover:border-teal-400/40">
+              <input type="radio" name="payment" value="online" [(ngModel)]="selectedPaymentMethod"
+                class="h-4 w-4 accent-teal-400" />
+              <div>
+                <div class="text-sm font-semibold text-white">Online Payment</div>
+                <div class="text-xs text-gray-400">Secure card or UPI checkout</div>
+              </div>
+            </label>
+
+            <label class="flex cursor-pointer items-center gap-3 rounded-3xl border border-white/10 bg-black/30 p-4 transition hover:border-teal-400/40">
+              <input type="radio" name="payment" value="cod" [(ngModel)]="selectedPaymentMethod"
+                class="h-4 w-4 accent-teal-400" />
+              <div>
+                <div class="text-sm font-semibold text-white">Cash on Delivery</div>
+                <div class="text-xs text-gray-400">Pay when your order arrives</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="mt-4 rounded-2xl bg-black/30 p-4 border border-white/10">
+            <p class="text-sm text-gray-300">{{ selectedPaymentMethod === 'cod' ? 'You will pay in cash when the package arrives.' : 'Proceed with secure online payment through saved card or UPI.' }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-[2rem] border border-white/10 bg-gradient-to-br from-[#07101e] to-[#0f172a] p-6 shadow-2xl backdrop-blur-xl">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <span class="text-[10px] font-black uppercase tracking-[0.3em] text-teal-300">Order summary</span>
+            <h2 class="mt-3 text-xl font-bold text-white">Selected product</h2>
+          </div>
+          <div class="rounded-3xl bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.3em] text-teal-200 border border-teal-400/20">
+            1 item</div>
+        </div>
+
+        <div class="mt-6 rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
+          <div class="flex items-center gap-4">
+            <div
+              class="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-teal-500/15 to-blue-500/15 border border-white/10 text-teal-300">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-7 h-7">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17" />
+                <circle cx="17" cy="20" r="2" />
+                <circle cx="7" cy="20" r="2" />
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-[0.24em] text-gray-400">{{ product?.category || 'Product' }}</p>
+              <h3 class="text-lg font-semibold text-white leading-snug">{{ product?.product_name || 'No product selected' }}</h3>
+            </div>
+          </div>
+
+          <div class="mt-5 grid gap-3 sm:grid-cols-2 text-sm text-gray-300">
+            <div class="flex items-center justify-between">
+              <span>Price</span>
+              <span class="font-semibold text-white">{{ product?.price | currency:'PKR':'symbol-narrow':'1.0-0' }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Store</span>
+              <span class="text-right text-gray-300">{{ product?.store?.name }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Availability</span>
+              <span class="text-right text-green-400">{{ product?.in_stock ? 'In stock' : 'Out of stock' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
+          <div class="flex justify-between text-sm text-gray-400 mb-2">
+            <span>Subtotal</span>
+            <span>{{ totalPrice | currency:'PKR':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <div class="flex justify-between text-sm text-gray-400 mb-2">
+            <span>Shipping</span>
+            <span>Free</span>
+          </div>
+          <div class="border-t border-white/10 pt-4 flex items-center justify-between text-lg font-bold text-white">
+            <span>Total</span>
+            <span>{{ totalPrice | currency:'PKR':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <button type="button" (click)="placeOrder()"
+          class="mt-6 w-full rounded-[1.25rem] bg-gradient-to-r from-teal-500 to-emerald-400 px-5 py-3 text-sm font-bold text-[#0b1120] shadow-[0_10px_30px_rgba(45,212,191,0.25)] hover:from-teal-400 hover:to-emerald-300 transition-all">
+          Confirm purchase
+        </button>
+      </section>
+    </div>
+
+    <div *ngIf="!product" class="mt-8 rounded-[2rem] border border-rose-500/20 bg-rose-500/5 p-5 text-rose-200">
+      <p class="text-sm">No product is currently selected. Return to the chat to pick a product first.</p>
+      <a routerLink="/chat" class="mt-3 inline-flex items-center gap-2 text-teal-300 hover:text-white">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to chat
+      </a>
+    </div>
+  </div>
+</div>
