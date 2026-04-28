@@ -11,6 +11,7 @@ export interface ProductStore {
 }
 
 export interface ChatProduct {
+  id?: number | string;
   product_name: string;
   category: string;
   price: number;

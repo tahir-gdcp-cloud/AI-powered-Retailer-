@@ -2,10 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: wisemind-frontend-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
-  ingressClassName: nginx  # This now matches your 'kubectl get ingressclasses'
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - wisemind.techbitsit.com
+    secretName: wisemind-tls-secret  # Cert-manager will create this automatically
   rules:
-  - host: wisemind.techbits.com
+  - host: wisemind.techbitsit.com
     http:
       paths:
       - path: /
