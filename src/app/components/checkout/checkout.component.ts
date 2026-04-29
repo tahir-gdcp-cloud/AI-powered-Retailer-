@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { ChatService, ChatProduct } from '../../services/chat.service';
 import { CheckoutService } from '../../services/checkout.service';
+import { AuthService } from '../../services/auth.service';
 import { NetworkBackgroundComponent } from '../network-background/network-background.component';
 
 @Component({
@@ -15,6 +16,7 @@ import { NetworkBackgroundComponent } from '../network-background/network-backgr
 export class CheckoutComponent implements OnInit {
   chatService = inject(ChatService);
   checkoutService = inject(CheckoutService);
+  authService = inject(AuthService);
   router = inject(Router);
 
   form = {
@@ -34,6 +36,11 @@ export class CheckoutComponent implements OnInit {
   hasSavedDetails = signal(false);
 
   ngOnInit() {
+    // Pre-fill email from auth service as it should be constant
+    const savedEmail = this.authService.userEmail();
+    if (savedEmail) {
+      this.form.email = savedEmail;
+    }
     this.checkSavedUserInfo();
   }
 

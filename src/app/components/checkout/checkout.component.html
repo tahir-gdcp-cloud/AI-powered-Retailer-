@@ -61,8 +61,8 @@
 
           <label class="block text-sm text-gray-300">
             <span class="mb-2 block text-xs uppercase tracking-[0.24em] text-gray-400">Email</span>
-            <input type="email" [(ngModel)]="form.email"
-              class="w-full rounded-2xl border border-white/10 bg-[#0b1120] px-4 py-3 text-white outline-none focus:border-teal-400/60 focus:ring-2 focus:ring-teal-400/20" />
+            <input type="email" [(ngModel)]="form.email" readonly
+              class="w-full rounded-2xl border border-white/10 bg-[#0b1120]/60 px-4 py-3 text-gray-400 outline-none cursor-not-allowed" />
           </label>
 
           <label class="block text-sm text-gray-300">
@@ -204,18 +204,6 @@
           </span>
         </button>
 
-        <div *ngIf="successMessage()" class="mt-4 rounded-2xl border border-teal-400/40 bg-teal-500/10 p-4 text-teal-200">
-          <div class="flex gap-3 items-start">
-            <svg class="h-5 w-5 shrink-0 text-teal-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            <div>
-              <p class="text-sm font-semibold">{{ successMessage() }}</p>
-              <p *ngIf="successOrderId()" class="text-xs text-teal-300/80 mt-1">Order ID: {{ successOrderId() }}</p>
-            </div>
-          </div>
-        </div>
-
         <div *ngIf="errorMessage()" class="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-rose-200">
           <div class="flex gap-2">
             <svg class="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -237,4 +225,22 @@
       </a>
     </div>
   </div>
+</div>
+
+<!-- Success Toaster -->
+<div *ngIf="successMessage()" class="fixed top-4 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:top-6 sm:right-6 z-[100] w-[90%] sm:w-full max-w-sm rounded-xl border border-teal-400/40 bg-[#0b1120]/95 p-3 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-xl transition-all duration-500 ease-out flex items-center gap-3">
+  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/20 text-teal-400 border border-teal-500/30">
+    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+    </svg>
+  </div>
+  <div class="flex-1">
+    <p class="text-sm font-bold text-white">{{ successMessage() }}</p>
+    <p *ngIf="successOrderId()" class="text-[11px] text-teal-200/80">Order ID: <span class="font-mono text-teal-100">{{ successOrderId() }}</span></p>
+  </div>
+  <button (click)="successMessage.set(null)" class="shrink-0 text-gray-500 hover:text-white transition-colors">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
 </div>

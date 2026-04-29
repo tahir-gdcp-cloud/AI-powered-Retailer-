@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { NetworkBackgroundComponent } from '../network-background/network-background.component';
 import { CheckoutService } from '../../services/checkout.service';
 
@@ -38,6 +38,11 @@ interface UserProfile {
 })
 export class UserDashboardComponent implements OnInit {
   checkoutService = inject(CheckoutService);
+  router = inject(Router);
+
+  lastSessionId = signal<string | null>(
+    typeof window !== 'undefined' ? localStorage.getItem('current_session_id') : null
+  );
 
   isLoading = signal(true);
   errorMessage = signal<string | null>(null);

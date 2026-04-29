@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChatMainComponent } from '../chat-main/chat-main.component';
@@ -7,6 +7,7 @@ import { ChatService } from '../../services/chat.service';
 import { ProductDetailsComponent } from '../product-details/product-details.component';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CheckoutService } from '../../services/checkout.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -18,8 +19,10 @@ import { Subscription } from 'rxjs';
 export class ChatLayoutComponent {
   chatService = inject(ChatService);
   authService = inject(AuthService);
+  private checkoutService = inject(CheckoutService);
   private route = inject(ActivatedRoute);
   private routeSub: Subscription | null = null;
+  hasOrders = signal(false);
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe(params => {
@@ -36,6 +39,21 @@ export class ChatLayoutComponent {
         }
       }
     });
+
+    if (this.authService.isLoggedIn()) {
+      this.checkUserOrders();
+    }
+  }
+
+  async checkUserOrders() {
+    try {
+      const response = await this.checkoutService.getOrderStatus('my-orders').toPromise();
+      if (Array.isArray(response) && response.length > 0) {
+        this.hasOrders.set(true);
+      }
+    } catch (error) {
+      console.error('Failed to check user orders', error);
+    }
   }
 
   ngOnDestroy() {

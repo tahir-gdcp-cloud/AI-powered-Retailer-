@@ -12,7 +12,7 @@
           <h1 class="text-3xl sm:text-2xl font-black tracking-tight">Account Overview</h1>
           <p class="text-sm text-gray-400 mt-2">Manage your account and view order history.</p>
         </div>
-        <a routerLink="/chat"
+        <a [routerLink]="lastSessionId() ? ['/chat', lastSessionId()] : ['/chat']"
           class="inline-flex items-center gap-2 text-sm font-semibold text-teal-300 hover:text-white transition-all">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
