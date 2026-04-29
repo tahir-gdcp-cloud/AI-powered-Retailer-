@@ -45,6 +45,7 @@ export class UserDashboardComponent implements OnInit {
 
   userProfile = signal<UserProfile | null>(null);
   userOrders = signal<Order[]>([]);
+  selectedOrder = signal<Order | null>(null);
 
   ngOnInit() {
     this.fetchDashboardData();
@@ -123,6 +124,21 @@ export class UserDashboardComponent implements OnInit {
       this.errorMessage.set('Failed to load dashboard data. Please try again later.');
     } finally {
       this.isLoading.set(false);
+    }
+  }
+
+  openOrderDetails(order: Order) {
+    this.selectedOrder.set(order);
+    // Prevent body scrolling when dialog is open
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeOrderDetails() {
+    this.selectedOrder.set(null);
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
     }
   }
 }
