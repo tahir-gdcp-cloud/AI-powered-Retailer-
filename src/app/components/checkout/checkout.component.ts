@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { NetworkBackgroundComponent } from '../network-background/network-backgr
   imports: [CommonModule, FormsModule, RouterModule, NetworkBackgroundComponent],
   templateUrl: './checkout.component.html'
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
   chatService = inject(ChatService);
   checkoutService = inject(CheckoutService);
   router = inject(Router);
@@ -31,6 +31,33 @@ export class CheckoutComponent {
   errorMessage = signal<string | null>(null);
   successMessage = signal<string | null>(null);
   successOrderId = signal<string | null>(null);
+  hasSavedDetails = signal(false);
+
+  ngOnInit() {
+    this.checkSavedUserInfo();
+  }
+
+  async checkSavedUserInfo() {
+    try {
+      const response = await this.checkoutService.getUserInfo().toPromise();
+      if (response && response.data) {
+        const data = response.data;
+        if (data.full_name && data.email && data.address) {
+          this.form = {
+            fullName: data.full_name || data.fullName || '',
+            email: data.email || '',
+            phone: data.phone || '',
+            address: data.address || '',
+            city: data.city || '',
+            postal: data.postal_code || data.postalCode || ''
+          };
+          this.hasSavedDetails.set(true);
+        }
+      }
+    } catch (error) {
+      console.error('Could not fetch saved user info', error);
+    }
+  }
 
   get product(): ChatProduct | null {
     return this.chatService.selectedProduct();
