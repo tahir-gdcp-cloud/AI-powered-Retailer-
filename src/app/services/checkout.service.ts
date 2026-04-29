@@ -47,6 +47,20 @@ export class CheckoutService {
   }
 
   getOrderStatus(orderId: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/orders/${orderId}`);
+    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+    const headers: { [key: string]: string } = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return this.http.get(`${this.baseUrl}/api/orders/${orderId}`, { headers });
+  }
+
+  getUserInfo(): Observable<any> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+    const headers: { [key: string]: string } = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return this.http.get(`${this.baseUrl}/api/orders/user-info`, { headers });
   }
 }

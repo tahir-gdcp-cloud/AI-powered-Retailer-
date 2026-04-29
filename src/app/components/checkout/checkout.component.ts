@@ -104,7 +104,7 @@ export class CheckoutComponent {
             this.successMessage.set(null);
             this.successOrderId.set(null);
             this.chatService.clearSelectedProduct();
-            this.router.navigate(['/chat']);
+            this.router.navigate(['/dashboard']);
           }, 2000);
         }
       } else {
@@ -118,7 +118,7 @@ export class CheckoutComponent {
         setTimeout(() => {
           this.successMessage.set(null);
           this.chatService.clearSelectedProduct();
-          this.router.navigate(['/chat']);
+          this.router.navigate(['/dashboard']);
         }, 2000);
       } else {
         this.errorMessage.set(error.error?.message || 'An error occurred while placing your order. Please try again.');
