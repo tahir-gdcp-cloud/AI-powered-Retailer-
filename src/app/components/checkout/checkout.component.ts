@@ -138,7 +138,7 @@ export class CheckoutComponent implements OnInit {
             this.successMessage.set(null);
             this.successOrderId.set(null);
             this.chatService.clearSelectedProduct();
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/thank-you']);
           }, 2000);
         }
       } else {
@@ -152,7 +152,7 @@ export class CheckoutComponent implements OnInit {
         setTimeout(() => {
           this.successMessage.set(null);
           this.chatService.clearSelectedProduct();
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/thank-you']);
         }, 2000);
       } else {
         this.errorMessage.set(error.error?.message || 'An error occurred while placing your order. Please try again.');
