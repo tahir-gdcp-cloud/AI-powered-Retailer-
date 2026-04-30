@@ -79,3 +79,21 @@
     </div>
   </div>
 </div>
+
+<!-- Login Success Toaster -->
+<div *ngIf="showLoginToast()" class="fixed top-4 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:top-6 sm:right-6 z-[200] w-[90%] sm:w-full max-w-sm rounded-xl border border-teal-400/40 bg-[#0b1120]/95 p-3 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-xl transition-all duration-500 ease-out flex items-center gap-3">
+  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/20 text-teal-400 border border-teal-500/30">
+    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+    </svg>
+  </div>
+  <div class="flex-1">
+    <p class="text-sm font-bold text-white">Successfully logged in!</p>
+    <p class="text-[11px] text-teal-200/80">Welcome back, {{ authService.userName() }}</p>
+  </div>
+  <button (click)="showLoginToast.set(false)" class="shrink-0 text-gray-500 hover:text-white transition-colors">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+</div>

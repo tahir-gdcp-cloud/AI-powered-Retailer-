@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authService.loginWithGoogle(idToken, name, email).subscribe({
       next: (res) => {
         this.isLoading = false;
+        localStorage.setItem('just_logged_in', '1');
         this.router.navigate(['/chat']);
       },
       error: (err) => {

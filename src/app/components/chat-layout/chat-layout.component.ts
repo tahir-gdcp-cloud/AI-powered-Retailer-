@@ -23,6 +23,7 @@ export class ChatLayoutComponent {
   private route = inject(ActivatedRoute);
   private routeSub: Subscription | null = null;
   hasOrders = signal(false);
+  showLoginToast = signal(false);
 
   ngOnInit() {
     this.routeSub = this.route.params.subscribe(params => {
@@ -42,6 +43,13 @@ export class ChatLayoutComponent {
 
     if (this.authService.isLoggedIn()) {
       this.checkUserOrders();
+    }
+
+    // Show login success toaster if just redirected from Google login
+    if (typeof window !== 'undefined' && localStorage.getItem('just_logged_in') === '1') {
+      localStorage.removeItem('just_logged_in');
+      this.showLoginToast.set(true);
+      setTimeout(() => this.showLoginToast.set(false), 4000);
     }
   }
 
