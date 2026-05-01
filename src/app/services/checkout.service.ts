@@ -31,7 +31,7 @@ export interface CheckoutResponse {
 })
 export class CheckoutService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://127.0.0.1:80';
+  private baseUrl = 'https://wisemind.techbitsit.com';
 
   placeOrder(data: CheckoutRequest): Observable<CheckoutResponse> {
     const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;

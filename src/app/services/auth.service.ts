@@ -12,7 +12,7 @@ export class AuthService {
   private router = inject(Router);
 
   // Using the host found in chat.service.ts
-  private baseUrl = 'http://67.207.76.73/auth';
+  private baseUrl = 'https://wisemind.techbitsit.com/auth';
 
   // Profile Signals
   userName = signal<string | null>(null);

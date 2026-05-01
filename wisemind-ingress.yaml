@@ -5,6 +5,10 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:4200, https://wisemind.techbitsit.com"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS, DELETE"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
 spec:
   ingressClassName: nginx
   tls:
@@ -15,10 +19,24 @@ spec:
   - host: wisemind.techbitsit.com
     http:
       paths:
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service-svc
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-flask-svc
+            port:
+              number: 80
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: ai-chat-ui
+            name: ai-chat-svc
             port:
               number: 80

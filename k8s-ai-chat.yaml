@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: ai-chat-ui
-        image: tahirgdcp128/ai-chat-ui:1.1
+        image: tahirgdcp128/ai-chat-ui:3.8
         ports:
         - containerPort: 80
 ---
@@ -23,7 +23,7 @@ kind: Service
 metadata:
   name: ai-chat-svc
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: ai-chat-ui
   ports:

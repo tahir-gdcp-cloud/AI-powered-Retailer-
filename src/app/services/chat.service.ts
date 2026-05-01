@@ -146,7 +146,7 @@ export class ChatService {
     }]);
 
     try {
-      const response = await fetch('http://157.245.24.224/api/chat', {
+      const response = await fetch('https://wisemind.techbitsit.com/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
